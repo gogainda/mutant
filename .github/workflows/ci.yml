@@ -20,7 +20,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        ruby: [ruby-2.7, ruby-3.0, ruby-3.1]
+        ruby: [ruby-3.1, truffleruby-head]
         os: [macos-latest, ubuntu-latest]
     steps:
     - uses: actions/checkout@v3
@@ -36,7 +36,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        ruby: [ruby-2.7, ruby-3.0, ruby-3.1]
+        ruby: [ruby-3.1, truffleruby-head]
         os: [macos-latest, ubuntu-latest]
     steps:
     - uses: actions/checkout@v3
@@ -47,87 +47,3 @@ jobs:
         ruby-version: ${{ matrix.ruby }}
         bundler-cache: true
     - run: bundle exec mutant run --zombie --since HEAD~1
-  ruby-integration-misc:
-    name: Integration Misc
-    runs-on: ${{ matrix.os }}
-    timeout-minutes: 10
-    strategy:
-      fail-fast: false
-      matrix:
-        ruby: [ruby-2.7, ruby-3.0, ruby-3.1]
-        os: [macos-latest, ubuntu-latest]
-    steps:
-    - uses: actions/checkout@v3
-    - uses: ruby/setup-ruby@v1
-      with:
-        ruby-version: ${{ matrix.ruby }}
-        bundler-cache: true
-    - run: |
-        bundle exec rspec                                            \
-          spec/integration/mutant/null_spec.rb                       \
-          spec/integration/mutant/isolation/fork_spec.rb             \
-          spec/integration/mutant/test_mutator_handles_types_spec.rb
-  ruby-integration-minitest:
-    name: Integration Minitest
-    runs-on: ${{ matrix.os }}
-    timeout-minutes: 10
-    strategy:
-      fail-fast: false
-      matrix:
-        ruby: [ruby-2.7, ruby-3.0, ruby-3.1]
-        os: [macos-latest, ubuntu-latest]
-    steps:
-    - uses: actions/checkout@v3
-    - uses: ruby/setup-ruby@v1
-      with:
-        ruby-version: ${{ matrix.ruby }}
-        bundler-cache: true
-    - run: bundle exec rspec spec/integration -e minitest
-  ruby-integration-rspec:
-    name: Integration RSpec
-    runs-on: ${{ matrix.os }}
-    timeout-minutes: 10
-    strategy:
-      fail-fast: false
-      matrix:
-        ruby: [ruby-2.7, ruby-3.0, ruby-3.1]
-        os: [macos-latest, ubuntu-latest]
-    steps:
-    - uses: actions/checkout@v3
-    - uses: ruby/setup-ruby@v1
-      with:
-        ruby-version: ${{ matrix.ruby }}
-        bundler-cache: true
-    - run: bundle exec rspec spec/integration -e rspec
-  ruby-integration-generation:
-    name: Integration Mutation Generation
-    runs-on: ${{ matrix.os }}
-    timeout-minutes: 10
-    strategy:
-      fail-fast: false
-      matrix:
-        ruby: [ruby-2.7, ruby-3.0, ruby-3.1]
-        os: [macos-latest, ubuntu-latest]
-    steps:
-    - uses: actions/checkout@v3
-    - uses: ruby/setup-ruby@v1
-      with:
-        ruby-version: ${{ matrix.ruby }}
-        bundler-cache: true
-    - run: bundle exec rspec spec/integration -e generation
-  ruby-rubocop:
-    name: Rubocop
-    runs-on: ${{ matrix.os }}
-    timeout-minutes: 10
-    strategy:
-      fail-fast: false
-      matrix:
-        ruby: [ruby-2.7, ruby-3.0, ruby-3.1]
-        os: [macos-latest, ubuntu-latest]
-    steps:
-    - uses: actions/checkout@v3
-    - uses: ruby/setup-ruby@v1
-      with:
-        ruby-version: ${{ matrix.ruby }}
-        bundler-cache: true
-    - run: bundle exec rubocop
